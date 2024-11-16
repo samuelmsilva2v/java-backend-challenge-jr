@@ -12,7 +12,7 @@ public interface ProdutoService {
 	
 	ProdutoResponseDto atualizar(UUID id, ProdutoRequestDto request);
 	
-	ProdutoResponseDto deletar(UUID id);
+	String deletar(UUID id);
 	
 	ProdutoResponseDto consultarPorId(UUID id);
 	

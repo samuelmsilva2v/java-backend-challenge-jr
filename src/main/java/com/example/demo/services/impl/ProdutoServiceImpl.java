@@ -14,98 +14,98 @@ import com.example.demo.repository.ProdutoRepository;
 import com.example.demo.services.interfaces.ProdutoService;
 
 @Service
-public class ProdutoServiceImpl implements ProdutoService{
-	
+public class ProdutoServiceImpl implements ProdutoService {
+
 	@Autowired
 	private ProdutoRepository produtoRepository;
+	
+	//TODO ObjectMapper
 
 	@Override
 	public ProdutoResponseDto cadastrar(ProdutoRequestDto request) {
-		
+
 		var produto = new Produto();
 		produto.setId(UUID.randomUUID());
 		produto.setNome(request.getNome());
 		produto.setTipo(request.getTipo());
 		produto.setPrecoUnitario(request.getPrecoUnitario());
-		
+
 		produtoRepository.save(produto);
-		
+
 		var response = new ProdutoResponseDto();
 		response.setId(produto.getId());
 		response.setNome(produto.getNome());
 		response.setTipo(produto.getTipo());
 		response.setPrecoUnitario(produto.getPrecoUnitario());
-		
+
 		return response;
 	}
 
 	@Override
 	public ProdutoResponseDto atualizar(UUID id, ProdutoRequestDto request) {
-		
-		var produto = produtoRepository.findById(id).get();
+
+		var produto = produtoRepository.findById(id).get(); // TODO EntityNotFoundException mapear a exceção para retornar o status HTTP correto
 		produto.setNome(request.getNome());
 		produto.setTipo(request.getTipo());
 		produto.setPrecoUnitario(request.getPrecoUnitario());
-		
+
 		produtoRepository.save(produto);
-		
+
 		var response = new ProdutoResponseDto();
 		response.setId(produto.getId());
 		response.setNome(produto.getNome());
 		response.setTipo(produto.getTipo());
 		response.setPrecoUnitario(produto.getPrecoUnitario());
-		
+
 		return response;
 	}
 
 	@Override
-	public ProdutoResponseDto deletar(UUID id) {
-	
-		var produto = produtoRepository.findById(id).get();
-		
+	public String deletar(UUID id) {
+
+		var produto = produtoRepository.findById(id).get(); // TODO EntityNotFoundException mapear a exceção para retornar o status HTTP correto
+
 		produtoRepository.delete(produto);
-		
+
 		var response = new ProdutoResponseDto();
 		response.setId(produto.getId());
 		response.setNome(produto.getNome());
 		response.setTipo(produto.getTipo());
 		response.setPrecoUnitario(produto.getPrecoUnitario());
-		
-		return response;
+
+		return "Produto excluído com sucesso!";
 	}
 
 	@Override
 	public ProdutoResponseDto consultarPorId(UUID id) {
-		
-		var produto = produtoRepository.findById(id).get();
-		
+
+		var produto = produtoRepository.findById(id).get(); // TODO EntityNotFoundException mapear a exceção para retornar o status HTTP correto
+
 		var response = new ProdutoResponseDto();
 		response.setId(produto.getId());
 		response.setNome(produto.getNome());
 		response.setTipo(produto.getTipo());
 		response.setPrecoUnitario(produto.getPrecoUnitario());
-		
+
 		return response;
 	}
 
 	@Override
 	public List<ProdutoResponseDto> listar() {
-		
+
 		var response = new ArrayList<ProdutoResponseDto>();
-		
+
 		for (var produto : produtoRepository.findAll()) {
-			
+
 			var produtoResponse = new ProdutoResponseDto();
 			produtoResponse.setId(produto.getId());
 			produtoResponse.setNome(produto.getNome());
 			produtoResponse.setTipo(produto.getTipo());
 			produtoResponse.setPrecoUnitario(produto.getPrecoUnitario());
-			
+
 			response.add(produtoResponse);
 		}
-		
+
 		return response;
 	}
-
-	
 }
