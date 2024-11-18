@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.DashboardResponseDto;
 import com.example.demo.dto.ProdutoRequestDto;
 import com.example.demo.dto.ProdutoResponseDto;
 import com.example.demo.services.impl.ProdutoServiceImpl;
@@ -24,30 +25,35 @@ import jakarta.validation.Valid;
 public class ProdutoController {
 
 	@Autowired
-	private ProdutoServiceImpl produtoServiceImpl;
+	private ProdutoServiceImpl produtoService;
 	
 	@PostMapping
 	public ProdutoResponseDto insert(@RequestBody @Valid ProdutoRequestDto request) {
-		return produtoServiceImpl.cadastrar(request);
+		return produtoService.cadastrar(request);
 	}
 	
 	@PutMapping("{id}")
 	public ProdutoResponseDto update(@PathVariable UUID id, @RequestBody @Valid ProdutoRequestDto request) {
-		return produtoServiceImpl.atualizar(id, request);
+		return produtoService.atualizar(id, request);
 	}
 	
 	@DeleteMapping("{id}")
 	public String delete(@PathVariable UUID id) {
-		return produtoServiceImpl.deletar(id);
+		return produtoService.deletar(id);
 	}
 	
 	@GetMapping
 	public List<ProdutoResponseDto> getAll() {
-		return produtoServiceImpl.listar();
+		return produtoService.listar();
 	}
 	
 	@GetMapping("{id}")
 	public ProdutoResponseDto getById(@PathVariable UUID id) {
-		return produtoServiceImpl.consultarPorId(id);
+		return produtoService.consultarPorId(id);
 	}
+	
+	@GetMapping("/dashboard")
+    public List<DashboardResponseDto> getDashboard() {
+        return produtoService.calcularDashboard();
+    }
 }

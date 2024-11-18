@@ -3,6 +3,7 @@ package com.example.demo.services.interfaces;
 import java.util.List;
 import java.util.UUID;
 
+import com.example.demo.dto.DashboardResponseDto;
 import com.example.demo.dto.ProdutoRequestDto;
 import com.example.demo.dto.ProdutoResponseDto;
 
@@ -17,4 +18,6 @@ public interface ProdutoService {
 	ProdutoResponseDto consultarPorId(UUID id);
 	
 	List<ProdutoResponseDto> listar();
+	
+	List<DashboardResponseDto> calcularDashboard();
 }

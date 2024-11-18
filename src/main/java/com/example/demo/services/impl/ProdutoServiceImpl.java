@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.DashboardResponseDto;
 import com.example.demo.dto.ProdutoRequestDto;
 import com.example.demo.dto.ProdutoResponseDto;
 import com.example.demo.entities.Produto;
@@ -20,7 +21,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 
 	@Autowired
 	private ProdutoRepository produtoRepository;
-	
+
 	@Autowired
 	private ModelMapper modelMapper;
 
@@ -39,7 +40,8 @@ public class ProdutoServiceImpl implements ProdutoService {
 	@Override
 	public ProdutoResponseDto atualizar(UUID id, ProdutoRequestDto request) {
 
-		var produto = produtoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + id));
+		var produto = produtoRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + id));
 		produto.setNome(request.getNome());
 		produto.setTipo(request.getTipo());
 		produto.setPrecoUnitario(request.getPrecoUnitario());
@@ -54,7 +56,8 @@ public class ProdutoServiceImpl implements ProdutoService {
 	@Override
 	public String deletar(UUID id) {
 
-		var produto = produtoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + id));
+		var produto = produtoRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + id));
 
 		produtoRepository.delete(produto);
 
@@ -64,7 +67,8 @@ public class ProdutoServiceImpl implements ProdutoService {
 	@Override
 	public ProdutoResponseDto consultarPorId(UUID id) {
 
-		var produto = produtoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + id));
+		var produto = produtoRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + id));
 
 		var response = modelMapper.map(produto, ProdutoResponseDto.class);
 
@@ -74,9 +78,11 @@ public class ProdutoServiceImpl implements ProdutoService {
 	@Override
 	public List<ProdutoResponseDto> listar() {
 
-		return produtoRepository.findAll()
-                .stream()
-                .map(produto -> modelMapper.map(produto, ProdutoResponseDto.class))
-                .collect(Collectors.toList());
+		return produtoRepository.findAll().stream().map(produto -> modelMapper.map(produto, ProdutoResponseDto.class))
+				.collect(Collectors.toList());
+	}
+
+	public List<DashboardResponseDto> calcularDashboard() {
+		return produtoRepository.calcularDashboard();
 	}
 }
