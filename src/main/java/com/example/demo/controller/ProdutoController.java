@@ -17,6 +17,8 @@ import com.example.demo.dto.ProdutoRequestDto;
 import com.example.demo.dto.ProdutoResponseDto;
 import com.example.demo.services.impl.ProdutoServiceImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/produtos")
 public class ProdutoController {
@@ -25,12 +27,12 @@ public class ProdutoController {
 	private ProdutoServiceImpl produtoServiceImpl;
 	
 	@PostMapping
-	public ProdutoResponseDto insert(@RequestBody ProdutoRequestDto request) {
+	public ProdutoResponseDto insert(@RequestBody @Valid ProdutoRequestDto request) {
 		return produtoServiceImpl.cadastrar(request);
 	}
 	
 	@PutMapping("{id}")
-	public ProdutoResponseDto update(@PathVariable UUID id, @RequestBody ProdutoRequestDto request) {
+	public ProdutoResponseDto update(@PathVariable UUID id, @RequestBody @Valid ProdutoRequestDto request) {
 		return produtoServiceImpl.atualizar(id, request);
 	}
 	
