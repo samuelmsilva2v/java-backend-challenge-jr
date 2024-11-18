@@ -1,8 +1,8 @@
 package com.example.demo.services.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dto.ProdutoRequestDto;
 import com.example.demo.dto.ProdutoResponseDto;
 import com.example.demo.entities.Produto;
+import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.repository.ProdutoRepository;
 import com.example.demo.services.interfaces.ProdutoService;
 
@@ -38,7 +39,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 	@Override
 	public ProdutoResponseDto atualizar(UUID id, ProdutoRequestDto request) {
 
-		var produto = produtoRepository.findById(id).get(); // TODO EntityNotFoundException mapear a exceção para retornar o status HTTP correto
+		var produto = produtoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + id));
 		produto.setNome(request.getNome());
 		produto.setTipo(request.getTipo());
 		produto.setPrecoUnitario(request.getPrecoUnitario());
@@ -53,7 +54,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 	@Override
 	public String deletar(UUID id) {
 
-		var produto = produtoRepository.findById(id).get(); // TODO EntityNotFoundException mapear a exceção para retornar o status HTTP correto
+		var produto = produtoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + id));
 
 		produtoRepository.delete(produto);
 
@@ -63,7 +64,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 	@Override
 	public ProdutoResponseDto consultarPorId(UUID id) {
 
-		var produto = produtoRepository.findById(id).get(); // TODO EntityNotFoundException mapear a exceção para retornar o status HTTP correto
+		var produto = produtoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + id));
 
 		var response = modelMapper.map(produto, ProdutoResponseDto.class);
 
@@ -73,15 +74,9 @@ public class ProdutoServiceImpl implements ProdutoService {
 	@Override
 	public List<ProdutoResponseDto> listar() {
 
-		var response = new ArrayList<ProdutoResponseDto>();
-
-		for (var produto : produtoRepository.findAll()) {
-
-			var produtoResponse = modelMapper.map(produto, ProdutoResponseDto.class);
-
-			response.add(produtoResponse);
-		}
-
-		return response;
+		return produtoRepository.findAll()
+                .stream()
+                .map(produto -> modelMapper.map(produto, ProdutoResponseDto.class))
+                .collect(Collectors.toList());
 	}
 }
