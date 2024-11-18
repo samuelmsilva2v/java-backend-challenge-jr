@@ -1,5 +1,6 @@
 package com.example.demo.services.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -44,7 +45,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 				.orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + id));
 		produto.setNome(request.getNome());
 		produto.setTipo(request.getTipo());
-		produto.setPrecoUnitario(request.getPrecoUnitario());
+		produto.setPrecoUnitario(BigDecimal.valueOf(request.getPrecoUnitario()));
 
 		produtoRepository.save(produto);
 

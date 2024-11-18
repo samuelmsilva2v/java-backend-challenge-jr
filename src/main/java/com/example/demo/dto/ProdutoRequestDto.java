@@ -1,7 +1,5 @@
 package com.example.demo.dto;
 
-import java.math.BigDecimal;
-
 import com.example.demo.enums.TipoProduto;
 
 import jakarta.validation.constraints.DecimalMin;
@@ -22,5 +20,5 @@ public class ProdutoRequestDto {
 	
 	@NotNull(message = "O preço unitário é obrigatório.")
 	@DecimalMin(value = "0.01", inclusive = true, message = "O preço unitário deve ser maior que zero.")
-	private BigDecimal precoUnitario;
+	private Double precoUnitario;
 }
