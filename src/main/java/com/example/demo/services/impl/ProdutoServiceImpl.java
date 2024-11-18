@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,24 +20,17 @@ public class ProdutoServiceImpl implements ProdutoService {
 	@Autowired
 	private ProdutoRepository produtoRepository;
 	
-	//TODO ObjectMapper
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@Override
 	public ProdutoResponseDto cadastrar(ProdutoRequestDto request) {
 
-		var produto = new Produto();
+		var produto = modelMapper.map(request, Produto.class);
 		produto.setId(UUID.randomUUID());
-		produto.setNome(request.getNome());
-		produto.setTipo(request.getTipo());
-		produto.setPrecoUnitario(request.getPrecoUnitario());
-
 		produtoRepository.save(produto);
 
-		var response = new ProdutoResponseDto();
-		response.setId(produto.getId());
-		response.setNome(produto.getNome());
-		response.setTipo(produto.getTipo());
-		response.setPrecoUnitario(produto.getPrecoUnitario());
+		var response = modelMapper.map(produto, ProdutoResponseDto.class);
 
 		return response;
 	}
@@ -51,11 +45,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 
 		produtoRepository.save(produto);
 
-		var response = new ProdutoResponseDto();
-		response.setId(produto.getId());
-		response.setNome(produto.getNome());
-		response.setTipo(produto.getTipo());
-		response.setPrecoUnitario(produto.getPrecoUnitario());
+		var response = modelMapper.map(produto, ProdutoResponseDto.class);
 
 		return response;
 	}
@@ -67,12 +57,6 @@ public class ProdutoServiceImpl implements ProdutoService {
 
 		produtoRepository.delete(produto);
 
-		var response = new ProdutoResponseDto();
-		response.setId(produto.getId());
-		response.setNome(produto.getNome());
-		response.setTipo(produto.getTipo());
-		response.setPrecoUnitario(produto.getPrecoUnitario());
-
 		return "Produto excluído com sucesso!";
 	}
 
@@ -81,11 +65,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 
 		var produto = produtoRepository.findById(id).get(); // TODO EntityNotFoundException mapear a exceção para retornar o status HTTP correto
 
-		var response = new ProdutoResponseDto();
-		response.setId(produto.getId());
-		response.setNome(produto.getNome());
-		response.setTipo(produto.getTipo());
-		response.setPrecoUnitario(produto.getPrecoUnitario());
+		var response = modelMapper.map(produto, ProdutoResponseDto.class);
 
 		return response;
 	}
@@ -97,11 +77,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 
 		for (var produto : produtoRepository.findAll()) {
 
-			var produtoResponse = new ProdutoResponseDto();
-			produtoResponse.setId(produto.getId());
-			produtoResponse.setNome(produto.getNome());
-			produtoResponse.setTipo(produto.getTipo());
-			produtoResponse.setPrecoUnitario(produto.getPrecoUnitario());
+			var produtoResponse = modelMapper.map(produto, ProdutoResponseDto.class);
 
 			response.add(produtoResponse);
 		}
